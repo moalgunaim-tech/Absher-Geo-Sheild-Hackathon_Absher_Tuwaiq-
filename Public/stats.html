@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إحصائيات الأمان ومحاولات الدخول</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/stats.css">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">إحصائيات الأمان لمحاولات الدخول</div>
+      <div class="topbar-sub">
+        نظرة شاملة على الدول، مستويات الخطورة، البلاغات "هذا ليس أنا"، وواجهات Threat Intel + مساعد ذكاء اصطناعي.
+      </div>
+      <div class="topbar-team">
+        بيانات تأتي من <code>localStorage</code> الذي يحدّثه محرك المخاطر في لوحة التحكم.
+      </div>
+    </div>
+
+    <nav class="topbar-nav">
+      <a href="login.html" class="nav-link">تسجيل الدخول التجريبي</a>
+      <a href="dashboard.html" class="nav-link">لوحة الأمان</a>
+      <a href="stats.html" class="nav-link nav-link-active">الإحصائيات</a>
+    </nav>
+  </header>
+
+  <!-- شريط تنبيه لو في محاولة High قريبة -->
+  <div id="banner-high" class="banner-high hidden">
+    <span id="banner-high-text">لا توجد محاولات عالية حديثة.</span>
+  </div>
+
+  <!-- ملخص أعلى الصفحة -->
+  <section class="card summary-card">
+    <div class="summary-main">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">إجمالي المحاولات</div>
+          <div class="summary-value" id="stat-total">0</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">منخفضة</div>
+          <div class="summary-value summary-low" id="stat-low">0</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">متوسطة</div>
+          <div class="summary-value summary-medium" id="stat-medium">0</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">عالية</div>
+          <div class="summary-value summary-high" id="stat-high">0</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">بلاغات "هذا ليس أنا"</div>
+          <div class="summary-value" id="stat-not-me">0</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">مستوى الأمان العام (1–10)</div>
+          <div class="summary-value" id="stat-score">10</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">أيام بدون هجمة عالية</div>
+          <div class="summary-value" id="stat-days-no-high">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">آخر محاولة عالية</div>
+          <div class="summary-value small" id="stat-last-high-text">لا يوجد</div>
+        </div>
+      </div>
+      <p class="hint">
+        هذه الأرقام يتم تحديثها تلقائياً عند كل تحليل محاولة في لوحة الأمان، وتُحفظ محلياً في المتصفح (بدون إرسالها لخادم خارجي).
+      </p>
+    </div>
+
+    <div class="summary-services">
+      <h3 class="services-title">حالة التكامل مع الخدمات</h3>
+      <div class="services-list">
+        <div class="services-item">
+          <span class="services-label">وضع التشغيل:</span>
+          <span class="services-value" id="services-mode">جارِ الفحص...</span>
+        </div>
+        <div class="services-item">
+          <span class="services-label">خدمة تحديد الموقع (GeoIP):</span>
+          <span class="status-pill" id="services-geo">—</span>
+        </div>
+        <div class="services-item">
+          <span class="services-label">VirusTotal:</span>
+          <span class="status-pill" id="services-vt">—</span>
+        </div>
+        <div class="services-item">
+          <span class="services-label">AlienVault OTX:</span>
+          <span class="status-pill" id="services-otx">—</span>
+        </div>
+      </div>
+      <p class="hint">
+        في وضع الأوفلاين (Demo) يتم استخدام بيانات تجريبية بدون استدعاء حقيقي لأي API خارجي.
+      </p>
+    </div>
+  </section>
+
+  <!-- الدول + توزيع الساعات -->
+  <section class="layout-row">
+    <section class="card flex-2">
+      <h2 class="card-title">توزيع المحاولات حسب الدول</h2>
+      <p class="card-subtitle">
+        هذه تمثل خريطة منطقية للدول الأكثر ظهوراً في محاولات الدخول، مع إبراز الدول ذات المحاولات العالية.
+      </p>
+
+      <div id="country-empty" class="hint">
+        لا توجد بيانات دول حتى الآن. قم بإجراء بعض المحاولات من لوحة الأمان أولاً.
+      </div>
+
+      <div id="country-grid" class="country-grid"></div>
+    </section>
+
+    <section class="card flex-1">
+      <h2 class="card-title">توزيع المحاولات على ساعات اليوم</h2>
+      <p class="card-subtitle">
+        يساعد على فهم أوقات نشاط الهجمات، مثلاً تركّزها فجراً أو في أوقات معينة.
+      </p>
+
+      <div id="hours-empty" class="hint">
+        لا توجد محاولات بعد لرسم المخطط.
+      </div>
+
+      <div id="hour-bars" class="hours-container"></div>
+      <div class="hours-legend hint">
+        كل عمود يمثل ساعة (0–23)، وارتفاعه يعتمد على عدد المحاولات في تلك الساعة.
+      </div>
+    </section>
+  </section>
+
+  <!-- Threat Intel Widget -->
+  <section class="card">
+    <h2 class="card-title">Threat Intel - عناوين IP المشتبه بها</h2>
+    <p class="card-subtitle">
+      هذه نظرة على المحاولات المرتبطة بـ Threat Intel (تاج / IP مكرر / مستوى خطورة مرتفع).
+      يمكن تحليل أي IP بشكل أعمق عبر الزر الموجود في الجدول.
+    </p>
+
+    <div class="threat-summary">
+      <div class="summary-item">
+        <div class="summary-label">إجمالي المحاولات المرتبطة بـ Threat Intel</div>
+        <div class="summary-value" id="threat-total">0</div>
+      </div>
+    </div>
+
+    <div id="threat-empty" class="hint">
+      لا توجد عناوين IP مميزة حالياً. استخدم Threat Intel Tag في لوحة الأمان أو جرّب سيناريوهات عالية الخطورة.
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>عنوان IP</th>
+          <th>Threat Intel Tag</th>
+          <th>عدد المحاولات</th>
+          <th>أعلى مستوى خطورة</th>
+          <th>التحليل</th>
+        </tr>
+        </thead>
+        <tbody id="threat-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- الفلاتر + جدول المحاولات -->
+  <section class="card">
+    <h2 class="card-title">سجل المحاولات التفصيلي</h2>
+    <p class="card-subtitle">
+      يمكنك تصفية المحاولات حسب مستوى الخطورة، الدولة، أو المحاولات التي أبلغ عنها المستخدم بأنها "ليست منه".
+    </p>
+
+    <div class="filters-row">
+      <div class="filter-item">
+        <label for="filter-risk">مستوى الخطورة</label>
+        <select id="filter-risk">
+          <option value="">الكل</option>
+          <option value="low">منخفضة</option>
+          <option value="medium">متوسطة</option>
+          <option value="high">عالية</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label for="filter-country">الدولة</label>
+        <select id="filter-country">
+          <option value="">كل الدول</option>
+        </select>
+      </div>
+
+      <div class="filter-item filter-checkbox">
+        <label>
+          <input type="checkbox" id="filter-not-me-only">
+          عرض المحاولات المبلّغ عنها فقط ("هذا ليس أنا")
+        </label>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>الوقت</th>
+          <th>الدولة</th>
+          <th>المستوى</th>
+          <th>الجهاز</th>
+          <th>الشبكة</th>
+          <th>IP</th>
+          <th>"ليس أنا"</th>
+        </tr>
+        </thead>
+        <tbody id="attempts-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- مساعد الذكاء الاصطناعي -->
+  <section class="card">
+    <h2 class="card-title">مساعد الذكاء الاصطناعي لتحليل الوضع الأمني</h2>
+    <p class="card-subtitle">
+      يمكنك سؤاله أسئلة مثل: "وش أكثر دولة جت منها الهجمات في آخر ٣ أشهر؟" أو
+      "هل نحتاج نرفع حساسية السياسة بناءً على الأرقام الحالية؟".
+    </p>
+
+    <div class="assistant-layout">
+      <div class="assistant-input">
+        <textarea id="ai-question" rows="3" placeholder="اكتب سؤالك هنا..."></textarea>
+        <div class="assistant-actions">
+          <button id="btn-ai-ask" class="btn-primary">اسأل المساعد</button>
+          <span class="hint" id="ai-status"></span>
+        </div>
+      </div>
+      <div class="assistant-answer" id="ai-answer">
+        لم يتم طرح أي سؤال بعد.
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p class="hint">
+      ملاحظة: جميع البيانات يتم حفظها محلياً في متصفحك فقط عبر <code>localStorage</code>،
+      ويمكن مسحها في أي وقت من إعدادات المتصفح.
+    </p>
+  </footer>
+</div>
+
+<!-- مودال تفاصيل IP -->
+<div id="ip-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>تفاصيل عنوان IP</h3>
+      <button id="ip-modal-close" class="modal-close-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint">عنوان IP: <strong id="ip-modal-ip"></strong></p>
+      <p class="hint" id="ip-modal-status"></p>
+      <div id="ip-modal-content" class="modal-content-text"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/stats.js"></script>
+</body>
+</html>

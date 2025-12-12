@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة الأمان - مشروع حماية أبشر</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- ربط ملف الـ CSS المنفصل -->
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="soc-mode">
+<div class="page">
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">لوحة الأمان لمحاولات الدخول</div>
+      <div class="topbar-sub">
+        محرك تقييم مخاطر + طبقات مصادقة + ربط بحالة السفر وإحصائيات صفحة Threat Intel.
+      </div>
+      <div class="topbar-team">
+        فريق: بإمكانك تعديل الاسم هنا (مثال: فريق ربط أبشر بحالة السفر والتهديدات)
+      </div>
+    </div>
+
+    <nav class="topbar-nav">
+      <a href="login.html" class="nav-link">صفحة تسجيل الدخول التجريبية</a>
+      <a href="dashboard.html" class="nav-link">لوحة الأمان</a>
+      <a href="stats.html" class="nav-link">صفحة الإحصائيات</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- وضع العرض + سيناريوهات -->
+    <section class="card">
+      <h2 class="card-title">وضع العرض + سيناريوهات جاهزة</h2>
+      <p class="card-subtitle">
+        اختر بين وضع المستخدم (رسائل مبسطة) أو وضع SOC (تفاصيل تقنية)، ثم جرّب سيناريوهات جاهزة أمام اللجنة.
+      </p>
+
+      <div class="mode-toggle">
+        <button id="btn-mode-user" type="button" class="btn-secondary">
+          🧑‍💻 وضع مستخدم
+        </button>
+        <button id="btn-mode-soc" type="button" class="btn-secondary mode-btn-active">
+          🛡️ وضع SOC
+        </button>
+      </div>
+
+      <div class="buttons-row">
+        <button id="scenario-safe" type="button" class="btn-secondary">
+          سيناريو آمن
+        </button>
+        <button id="scenario-medium" type="button" class="btn-secondary">
+          سيناريو متوسط
+        </button>
+        <button id="scenario-high" type="button" class="btn-secondary">
+          سيناريو عالي
+        </button>
+        <button id="scenario-egypt" type="button" class="btn-secondary">
+          سيناريو صديق من مصر
+        </button>
+      </div>
+
+      <p class="hint">
+        السيناريوهات تعبّي الحقول تلقائياً، ثم يمكنك الضغط على "تحليل المحاولة" لتسجيلها في الإحصائيات وعرض القرار.
+      </p>
+    </section>
+
+    <!-- بيانات المحاولة -->
+    <section class="card">
+      <h2 class="card-title">بيانات المحاولة الحالية</h2>
+      <p class="card-subtitle">
+        هذه هي المدخلات اللي يستخدمها محرك المخاطر قبل ما يقرر: السماح، طلب تحقق إضافي، أو حظر المحاولة.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="input-state">حالة المستخدم في أبشر</label>
+          <select id="input-state">
+            <option value="inside">داخل المملكة</option>
+            <option value="traveler">مسافر</option>
+            <option value="login-fail">محاولة بكردنشال خاطئ</option>
+          </select>
+        </div>
+
+        <div class="form-group soc-only">
+          <label for="input-travel-country">دولة السفر المسجلة في أبشر</label>
+          <select id="input-travel-country">
+            <option value="">لا يوجد / داخل المملكة</option>
+            <option value="السعودية">السعودية</option>
+            <option value="مصر">مصر</option>
+            <option value="الإمارات">الإمارات</option>
+            <option value="تركيا">تركيا</option>
+            <option value="الهند">الهند</option>
+            <option value="الولايات المتحدة">الولايات المتحدة</option>
+            <option value="المملكة المتحدة">المملكة المتحدة</option>
+            <option value="دولة بعيدة">دولة بعيدة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-actual-country">دولة محاولة الدخول الفعلية</label>
+          <select id="input-actual-country">
+            <option value="">غير محددة</option>
+            <option value="السعودية">السعودية</option>
+            <option value="مصر">مصر</option>
+            <option value="الإمارات">الإمارات</option>
+            <option value="تركيا">تركيا</option>
+            <option value="الهند">الهند</option>
+            <option value="الولايات المتحدة">الولايات المتحدة</option>
+            <option value="المملكة المتحدة">المملكة المتحدة</option>
+            <option value="دولة بعيدة">دولة بعيدة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-device">نوع الجهاز</label>
+          <select id="input-device">
+            <option value="known">جهاز معروف (سبق استخدامه)</option>
+            <option value="new">جهاز جديد على الحساب</option>
+            <option value="unknown">غير معروف / بصمة جديدة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-network">نوع الشبكة</label>
+          <select id="input-network">
+            <option value="home">شبكة منزلية / موثوقة</option>
+            <option value="office">شبكة عمل / جهة حكومية</option>
+            <option value="public">واي فاي عام / مقهى / مطار</option>
+            <option value="vpn">VPN / Proxy</option>
+            <option value="unknown">غير معروف</option>
+          </select>
+        </div>
+
+        <div class="form-group soc-only">
+          <label for="input-ip">عنوان IP (اختياري)</label>
+          <input id="input-ip" type="text" placeholder="مثال: 185.21.34.90">
+        </div>
+
+        <div class="form-group soc-only">
+          <label for="input-threat">
+            Threat Intel Tag (اختياري)
+          </label>
+          <select id="input-threat">
+            <option value="">لا يوجد</option>
+            <option value="Bruteforce_Global">Bruteforce من Botnet عالمي</option>
+            <option value="Phishing_Campaign">حملة Phishing على منصات حكومية</option>
+            <option value="Known_Bad_Hosting">خادم استضافة معروف للهجمات</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>
+          <input id="input-not-me" type="checkbox">
+          المستخدم أبلغ أن "هذا ليس أنا" لهذه المحاولة
+        </label>
+      </div>
+
+      <div class="buttons-row">
+        <button id="btn-evaluate" type="button" class="btn-primary">
+          تحليل المحاولة وتحديث الإحصائيات
+        </button>
+      </div>
+
+      <p class="hint soc-only">
+        أي تحليل هنا يضاف إلى <strong>securityAnalytics</strong> في <code>localStorage</code>، ويمكن عرضه في stats.html مباشرة.
+      </p>
+    </section>
+
+    <!-- إعدادات السياسة (Sliders) -->
+    <section class="card soc-only">
+      <h2 class="card-title">إعدادات سياسة الأمان (حساسية العوامل)</h2>
+      <p class="card-subtitle">
+        تقدر تغيّر وزن العوامل بدون لمس الكود. هذا يمثل إعدادات فريق الأمن اللي يضبط السياسة حسب شهية المخاطرة.
+      </p>
+
+      <div class="slider-group">
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span>اختلاف دولة المحاولة عن حالة أبشر</span>
+            <span class="slider-value" id="w-travel-mismatch-val">25</span>
+          </div>
+          <input id="w-travel-mismatch" type="range" min="0" max="40" value="25">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span>جهاز جديد على الحساب</span>
+            <span class="slider-value" id="w-new-device-val">20</span>
+          </div>
+          <input id="w-new-device" type="range" min="0" max="40" value="20">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span>شبكة غير موثوقة (عامة / VPN)</span>
+            <span class="slider-value" id="w-network-risk-val">15</span>
+          </div>
+          <input id="w-network-risk" type="range" min="0" max="40" value="15">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span>وجود Threat Intel على الـ IP</span>
+            <span class="slider-value" id="w-threat-intel-val">30</span>
+          </div>
+          <input id="w-threat-intel" type="range" min="0" max="40" value="30">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span>بلاغ المستخدم "هذا ليس أنا"</span>
+            <span class="slider-value" id="w-not-me-val">40</span>
+          </div>
+          <input id="w-not-me" type="range" min="0" max="50" value="40">
+        </div>
+      </div>
+
+      <p class="hint">
+        القيم تحفظ تلقائياً في <code>localStorage</code> تحت المفتاح <code>riskWeights</code>.
+      </p>
+    </section>
+
+    <!-- نتيجة التقييم + MFA -->
+    <section class="card">
+      <h2 class="card-title">نتيجة التقييم الأمني</h2>
+      <p class="card-subtitle user-only">
+        هذه هي الرسالة التقريبية اللي يقدر يشوفها المستخدم بعد التقييم.
+      </p>
+      <p class="card-subtitle soc-only">
+        هذه النظرة موجهة لمركز العمليات الأمني (SOC): مستوى الخطورة، الأسباب، ونوع المصادقة المطلوب.
+      </p>
+
+      <div class="result-grid">
+        <div class="result-main">
+          <div class="stat-badge" id="risk-level-badge">
+            مستوى الخطورة: —
+          </div>
+          <div class="stat-badge" style="margin-top:6px;">
+            درجة الخطورة (0–100): <span id="risk-score">0</span>
+          </div>
+
+          <p class="hint" id="decision-text" style="margin-top:8px;">
+            لم يتم تحليل أي محاولة بعد. جرّب تعبّي الحقول أعلاه ثم اضغط "تحليل المحاولة".
+          </p>
+
+          <div class="soc-only">
+            <p class="hint" style="margin-top:8px;">أسباب رفع مستوى الخطورة:</p>
+            <ul class="insights-list" id="risk-reasons-list"></ul>
+          </div>
+
+          <div class="user-only" style="margin-top:8px;">
+            <p class="hint" id="user-message">
+              بعد تحليل المحاولة، ستظهر هنا رسالة مبسطة للمستخدم توضح إذا تم السماح أو طلب تحقق إضافي أو حظر المحاولة.
+            </p>
+          </div>
+        </div>
+
+        <div class="result-mfa">
+          <h3 style="font-size:0.95rem; margin-bottom:6px;">طبقات المصادقة حسب الخطورة</h3>
+
+          <div id="mfa-low" class="mfa-block" style="display:none;">
+            <p class="hint">
+              <strong>Low:</strong> السماح بالدخول مباشرة بدون خطوة إضافية.
+            </p>
+          </div>
+
+          <div id="mfa-medium" class="mfa-block" style="display:none;">
+            <p class="hint">
+              <strong>Medium:</strong> تظهر خطوة تحقق إضافية (رمز لمرة واحدة على الجوال أو تطبيق توثيق).
+            </p>
+            <div class="form-row" style="margin-top:6px;">
+              <input type="text"
+                     placeholder="أدخل رمز التحقق (للتمثيل فقط)"
+                     style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(255,255,255,0.25); background:rgba(0,0,0,0.4); color:#fff; font-size:0.85rem;">
+            </div>
+          </div>
+
+          <div id="mfa-high" class="mfa-block" style="display:none;">
+            <p class="hint" style="color:#ffb3b3;">
+              <strong>High:</strong> يتم حظر المحاولة فوراً، مع إرسال إشعار للمستخدم وفريق الـ SOC لاحتمال استيلاء على الحساب.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ربط ملف الـ JS المنفصل -->
+<script src="js/dashboard.js"></script>
+</body>
+</html>

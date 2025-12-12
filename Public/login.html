@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول التجريبي - مشروع حماية أبشر</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">تسجيل الدخول التجريبي</div>
+      <div class="topbar-sub">
+        هذه الصفحة تمثل الواجهة الأمامية للمستخدم، مع ربط كل محاولة دخول بسجل الإحصائيات الأمني.
+      </div>
+      <div class="topbar-team">
+        المستخدم التجريبي: <code>demo@absher.gov.sa</code> / كلمة المرور: <code>P@ssw0rd!</code>
+      </div>
+    </div>
+
+    <nav class="topbar-nav">
+      <a href="login.html" class="nav-link nav-link-active">تسجيل الدخول</a>
+      <a href="dashboard.html" class="nav-link">لوحة الأمان</a>
+      <a href="stats.html" class="nav-link">الإحصائيات</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="card login-card">
+      <h2 class="card-title">بوابة الدخول</h2>
+      <p class="card-subtitle">
+        إذا كانت البيانات صحيحة يتم توجيهك للوحة الأمان، وإذا كانت خاطئة تُسجَّل كمحاولة فاشلة في الإحصائيات.
+      </p>
+
+      <form id="login-form" class="form-grid">
+        <div class="form-group">
+          <label for="login-username">اسم المستخدم / البريد</label>
+          <input id="login-username" type="text" placeholder="demo@absher.gov.sa" autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">كلمة المرور</label>
+          <input id="login-password" type="password" placeholder="P@ssw0rd!" autocomplete="current-password">
+        </div>
+
+        <div class="form-group">
+          <label for="login-state">حالة المستخدم في أبشر</label>
+          <select id="login-state">
+            <option value="inside">داخل المملكة</option>
+            <option value="traveler">مسافر</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="login-travel-country">دولة السفر المسجلة (إن وجد)</label>
+          <select id="login-travel-country">
+            <option value="">لا يوجد / داخل المملكة</option>
+            <option value="السعودية">السعودية</option>
+            <option value="مصر">مصر</option>
+            <option value="الإمارات">الإمارات</option>
+            <option value="تركيا">تركيا</option>
+            <option value="الهند">الهند</option>
+            <option value="الولايات المتحدة">الولايات المتحدة</option>
+            <option value="المملكة المتحدة">المملكة المتحدة</option>
+            <option value="دولة بعيدة">دولة بعيدة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="login-actual-country">الدولة الحالية للمستخدم</label>
+          <select id="login-actual-country">
+            <option value="السعودية">السعودية</option>
+            <option value="مصر">مصر</option>
+            <option value="الإمارات">الإمارات</option>
+            <option value="تركيا">تركيا</option>
+            <option value="الهند">الهند</option>
+            <option value="الولايات المتحدة">الولايات المتحدة</option>
+            <option value="المملكة المتحدة">المملكة المتحدة</option>
+            <option value="دولة بعيدة">دولة بعيدة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="login-network">نوع الشبكة</label>
+          <select id="login-network">
+            <option value="home">شبكة منزلية</option>
+            <option value="office">جهة عمل / حكومية</option>
+            <option value="public">واي فاي عام</option>
+            <option value="vpn">VPN / Proxy</option>
+            <option value="unknown">غير معروف</option>
+          </select>
+        </div>
+      </form>
+
+      <div class="buttons-row">
+        <button id="login-submit" class="btn-primary" type="button">تسجيل الدخول</button>
+      </div>
+
+      <div id="login-message" class="login-message"></div>
+    </section>
+
+    <section class="card info-card">
+      <h2 class="card-title">كيف تخدم هذه الصفحة الفكرة؟</h2>
+      <ul class="info-list">
+        <li>بيانات الدخول الصحيحة: <code>demo@absher.gov.sa</code> / <code>P@ssw0rd!</code></li>
+        <li>أي محاولة فاشلة تُسجَّل في <strong>securityAnalytics</strong> وتظهر في صفحة الإحصائيات.</li>
+        <li>نربط مع الدولة الحالية + حالة السفر + نوع الشبكة لرفع قيمة البيانات الأمنية.</li>
+        <li>بعد النجاح يتم توجيه المستخدم إلى <strong>لوحة الأمان</strong> لعرض مزيد من التفاصيل.</li>
+      </ul>
+
+      <p class="hint" style="margin-top:8px;">
+        تقدر قدّام اللجنة:
+        <br>- تدخل بيانات صحيحة → ينجح الدخول.
+        <br>- تدخل باسورد غلط عمداً → توري كيف تُسجّل كمحاولة فاشلة وتظهر في الإحصائيات.
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="hint">
+      هذا نموذج تجريبي، لا يتم فيه إرسال أي بيانات حقيقية، بل يتم التخزين محلياً فقط لأغراض العرض.
+    </p>
+  </footer>
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>
